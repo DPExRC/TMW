@@ -15,8 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       title: 'Flutter Demo',
+      theme: ThemeData(
+        primaryColor: Colors.lightBlue, // Color de la barra de la aplicación
+        hintColor: Colors.lightBlue, // Color de acento para botones, etc.
+        scaffoldBackgroundColor: Colors.lightBlue, // Color de fondo de la pantalla
+      ),
       home: LoginScreen(),
     );
   }
@@ -29,9 +34,16 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Colors.blue; // Puedes cambiar este color según tus preferencias
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: Text(
+          "Iniciar sesión",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.lightBlue,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -40,7 +52,7 @@ class LoginScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             LoginForm(),
-            SizedBox(height: 16.0), // Añade espacio entre el formulario y el nuevo botón
+            SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -48,6 +60,11 @@ class LoginScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => RegistroScreen()),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                onPrimary: Colors.black,
+                // Establece el color de fondo del botón
+              ),
               child: Text("Registro"),
             ),
           ],
@@ -64,7 +81,12 @@ class RegistroScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Registro"),
+        title: const Text(
+          "Registro",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.lightBlue,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -86,12 +108,42 @@ class _RegistroFormState extends State<RegistroForm> {
   final TextEditingController _contrasenaController = TextEditingController();
 
   void _realizarRegistro() {
-    // Puedes agregar aquí la lógica de registro con el nombre y la contraseña
     String nombre = _nombreController.text;
     String contrasena = _contrasenaController.text;
 
-    // Realiza las acciones de registro según tus necesidades
-    print("Registro exitoso - Nombre: $nombre, Contraseña: $contrasena");
+    if (nombre.isNotEmpty && contrasena.isNotEmpty) {
+      // Registro exitoso
+      _mostrarDialog("Registro exitoso", "Nombre: $nombre\nContraseña: $contrasena");
+      // Limpia los campos después de mostrar el mensaje
+      _nombreController.clear();
+      _contrasenaController.clear();
+    } else {
+      // Campos vacíos, muestra un mensaje de error
+      _mostrarDialog("Error", "Por favor, completa todos los campos.");
+    }
+  }
+
+  void _mostrarDialog(String titulo, String mensaje) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titulo),
+          content: Text(mensaje),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "OK",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -103,17 +155,54 @@ class _RegistroFormState extends State<RegistroForm> {
         children: [
           TextFormField(
             controller: _nombreController,
-            decoration: InputDecoration(labelText: "Nombre"),
+            decoration: InputDecoration(
+              labelText: "Nombre",
+              labelStyle: TextStyle(color: Colors.black),
+              filled: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+            ),
           ),
+
+          SizedBox(height: 16.0),
+
           TextFormField(
             controller: _contrasenaController,
-            decoration: InputDecoration(labelText: "Contraseña"),
-            obscureText: true,
+            decoration: InputDecoration(
+              labelText: "Contraseña",
+              labelStyle: TextStyle(color: Colors.black),
+              filled: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+            ),
           ),
+
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _realizarRegistro,
-            child: Text("Realizar Registro"),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+            ),
+            child: Text(
+              "Realizar Registro",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
           ),
         ],
       ),
@@ -121,6 +210,9 @@ class _RegistroFormState extends State<RegistroForm> {
   }
 }
 
+
+
+//clase sin usar, para json
 class Usuario {
   String nombre;
   String contrasena;
@@ -195,16 +287,47 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           TextFormField(
             controller: _usernameController,
-            decoration: InputDecoration(labelText: "Usuario"),
+            decoration: InputDecoration(
+              labelText: "Usuario",
+              labelStyle: TextStyle(color: Colors.black),
+              filled: true,
+              fillColor: Colors.white, // Color de fondo
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue), // Cambia el color del borde cuando el campo está enfocado
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black), // Cambia el color del borde cuando el campo no está enfocado
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
           ),
+          SizedBox(height: 16.0),
           TextFormField(
             controller: _passwordController,
-            decoration: InputDecoration(labelText: "Contraseña"),
+            decoration: InputDecoration(
+              labelText: "Contraseña",
+              labelStyle: TextStyle(color: Colors.black),
+              filled: true,
+              fillColor: Colors.white, // Color de fondo
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue), // Cambia el color del borde cuando el campo está enfocado
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black), // Cambia el color del borde cuando el campo no está enfocado
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             obscureText: true,
           ),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _login,
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white, // Color del botón
+              onPrimary: Colors.black, // Color del texto en el botón
+            ),
             child: Text("Iniciar sesión"),
           ),
         ],
@@ -212,7 +335,6 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
-
 // Función para registrar un nuevo usuario
 void registrarUsuario(String nombre, String contrasena) {
   // Crear una instancia de Usuario con los datos proporcionados
@@ -280,46 +402,62 @@ class LevelsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Niveles"),
+        title: Text(
+          "Nivel",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.lightBlue,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Selecciona un nivel",
-              style: TextStyle(fontSize: 24.0),
-            ),
-            SizedBox(height: 20),
-            // Agregamos las tarjetas deslizantes para los niveles
-            LevelCard(
-              level: "Fácil",
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen(level: "Fácil")),
-                );
-              },
-            ),
-            LevelCard(
-              level: "Medio",
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen(level: "Medio")),
-                );
-              },
-            ),
-            LevelCard(
-              level: "Difícil",
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen(level: "Difícil")),
-                );
-              },
-            ),
-          ],
+      body: Container(
+        color: Colors.lightBlue, // Color de fondo del área de niveles
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Selecciona un nivel",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+              SizedBox(height: 20),
+
+              LevelCard(
+                level: "Fácil",
+                textColor: Colors.black,
+                backgroundColor: Colors.white,
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(level: "Fácil")),
+                  );
+                },
+              ),
+              LevelCard(
+                level: "Medio",
+                textColor: Colors.black,
+                backgroundColor: Colors.white,
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(level: "Medio")),
+                  );
+                },
+              ),
+              LevelCard(
+                level: "Difícil",
+                textColor: Colors.black,
+                backgroundColor: Colors.white,
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(level: "Difícil")),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -329,24 +467,35 @@ class LevelsScreen extends StatelessWidget {
 class LevelCard extends StatelessWidget {
   final String level;
   final VoidCallback onTap;
+  final Color backgroundColor;
+  final Color textColor;
 
   const LevelCard({
     Key? key,
     required this.level,
     required this.onTap,
+    required this.backgroundColor,
+    required this.textColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-        title: Text(level),
-        onTap: onTap,
+      child: Container(
+        color: backgroundColor,
+        child: ListTile(
+          title: Text(
+            level,
+            style: TextStyle(color: textColor), // Establece el color del texto
+          ),
+          onTap: onTap,
+        ),
       ),
     );
   }
 }
+
 
 class HomeScreen extends StatefulWidget {
   final String level;
@@ -356,6 +505,8 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+
+
 
 class _HomeScreenState extends State<HomeScreen> {
   //setting text style
@@ -381,6 +532,32 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  bool allCardsMatched() {
+    // Verifica si todas las cartas han sido emparejadas
+    return _game.gameImg!.every((card) => card == _game.hiddenCardpath);
+  }
+
+  void showWinAlert() {
+    // Muestra un diálogo de alerta
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("¡Has ganado!"),
+          content: Text("Puntaje: $score\nTiempo: ${formatTime(stopwatch.elapsed.inSeconds)}"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK", style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   int getCrossAxisCount() {
     if (widget.level == "Fácil") {
       return 4;
@@ -402,9 +579,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     int secondsElapsed = stopwatch.elapsed.inSeconds;
-
     return Scaffold(
-      backgroundColor: Color(0xFFE55870),
+      backgroundColor: Color(0xFF41C0F2),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -423,8 +599,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(builder: (context) => LevelsScreen()),
                   );
                 },
-                child: Text("Atrás"),
+                child: Icon(Icons.arrow_back, color: Colors.black), // Usamos 'child' en lugar de 'icon'
               ),
+
               info_card("Tiempo", formatTime(secondsElapsed)),
               info_card("Puntaje", "$score"),
             ],
@@ -476,7 +653,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: Color(0xFF41C0F2),
+                      color: Color(0xFFFFFFFF),
                       borderRadius: BorderRadius.circular(9.0),
                       image: DecorationImage(
                         image: AssetImage(_game.gameImg![index]),
