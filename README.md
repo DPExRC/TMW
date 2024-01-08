@@ -1,4 +1,4 @@
-# POKEDEK
+# POKÉDEX
 
 Se visualizan los diferentes Pokémon con sus respectivas características en forma de cartas.
 
