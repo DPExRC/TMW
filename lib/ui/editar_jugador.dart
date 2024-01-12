@@ -18,7 +18,7 @@ class _EditarJugadorState extends State<EditarJugador> {
 
   @override
   Widget build(BuildContext context) {
-    var textoWidget = "Añadir pokemon";
+    var textoWidget = "Añadir pokémon";
     int operacion = INSERCION;
     Jugador? jugador;
 
@@ -28,7 +28,7 @@ class _EditarJugadorState extends State<EditarJugador> {
       nombreController.text = jugador.nombre;
       equipoController.text = jugador.equipo;
       dorsalController.text = jugador.dorsal.toString();
-      textoWidget = "Editar pokemon";
+      textoWidget = "Editar pokémon";
     }
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +43,7 @@ class _EditarJugadorState extends State<EditarJugador> {
                    padding: const EdgeInsets.all(8.0),
                    child: TextField(
                      controller: nombreController,
-                     decoration: InputDecoration(labelText: "Tipo"),
+                     decoration: InputDecoration(labelText: "Nombre"),
                    ),
           ),
                 Padding(

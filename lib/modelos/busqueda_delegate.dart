@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-
+import '../bd/mongodb.dart';
+//import '../ui/editar_jugador.dart';
+import '../ui/fichajugador.dart';
 import 'jugadores.dart';
 
-class JugadorSearch extends SearchDelegate<Jugador> {
-  final List<Jugador> jugadores;
-
-  JugadorSearch(this.jugadores);
-
+class Searchpokemon extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
-          showSuggestions(context);
         },
       ),
     ];
@@ -23,40 +20,48 @@ class JugadorSearch extends SearchDelegate<Jugador> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
-        Navigator.pop(context);
+        close(context, null);
       },
     );
   }
 
-
   @override
   Widget buildResults(BuildContext context) {
-    final results = jugadores.where((jugador) => jugador.nombre.toLowerCase().contains(query.toLowerCase()));
-
-    return ListView(
-      children: results.map<Widget>((jugador) => ListTile(
-        title: Text(jugador.nombre),
-        onTap: () {
-          close(context, jugador);
-        },
-      )).toList(),
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: MongoDB.buscarPorNombre(query),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final jugador = snapshot.data;
+          if (jugador != null) {
+            return FichaJugador(
+              jugador: Jugador.fromMap(jugador),
+              onTapDelete: () {
+                _eliminarJugador(Jugador.fromMap(jugador));
+              },
+              onTapEdit: () {
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => EditarJugador()));
+              },
+            );
+          } else {
+            return const Text('Jugador no encontrado');
+          }
+        }
+      },
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestions = jugadores.where((jugador) => jugador.nombre.toLowerCase().startsWith(query.toLowerCase()));
+    return Text('Buscando Pokémon');
+  }
 
-    return ListView(
-      children: suggestions.map<Widget>((jugador) => ListTile(
-        title: Text(jugador.nombre),
-        onTap: () {
-          query = jugador.nombre;
-          showResults(context);
-        },
-      )).toList(),
-    );
+  void _eliminarJugador(Jugador jugador) async {
+    await MongoDB.eliminar(jugador);
   }
 }

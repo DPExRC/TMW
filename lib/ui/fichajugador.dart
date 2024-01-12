@@ -8,54 +8,56 @@ class FichaJugador extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 2.0,
-      color: Colors.white,
-      child: ListTile(
-        leading: Image.asset('assets/images/${jugador.nombre.trim()}.png'), // Asegúrate de que las imágenes estén en la carpeta correcta
-        title: Text(jugador.nombre),
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(jugador.nombre),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[
-                      Text('Altura: ${jugador.dorsal}'),
-                      Text('Peso: ${jugador.equipo}'),
-                    ],
+    return SizedBox(
+      height: 80,  // vertical
+      width: double.infinity,  // ancho
+      child: Material(
+        elevation: 5.0,
+        color: Colors.white,
+        child: ListTile(
+          leading: Image.asset('assets/images/${jugador.nombre.trim()}.png'), // Asegúrate de que las imágenes estén en la carpeta correcta
+          title: Text(jugador.nombre),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(jugador.nombre),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Altura: ${jugador.dorsal}'),
+                        Text('Peso: ${jugador.equipo}'),
+                      ],
+                    ),
                   ),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Aceptar'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            GestureDetector(
-                child: Icon(Icons.edit),
-                onTap: onTapEdit
-            ),
-            GestureDetector(
-              child: Icon(Icons.delete),
-              onTap: onTapDelete,
-            )
-          ],
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Aceptar'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                onTap: onTapEdit,
+                child: const Icon(Icons.edit),
+              ),
+              GestureDetector(
+                onTap: onTapDelete,
+                child: const Icon(Icons.delete),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
-
-
 }
