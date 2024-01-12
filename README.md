@@ -1,6 +1,6 @@
-# APP- Juego de Memoria
+# POKÉDEX
 
-A new Flutter project.
+Se visualizan los diferentes Pokémon con sus respectivas características en forma de cartas.
 
 ## Getting Started
 
